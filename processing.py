@@ -16,7 +16,9 @@ from math import ceil
 import subprocess
 import os
 
-colors = np.array(list(chain(mcolors.CSS4_COLORS.values())))
+colors = np.array(list(chain(mcolors.BASE_COLORS.values())))        ##mcolors.CSS4_COLORS
+
+
 
 def count_seg(filename):
     image = io.imread(filename)
@@ -32,14 +34,14 @@ def label_segments(filename,savename=''):
     thresh = filters.threshold_mean(gray_image)
     binary = gray_image > thresh
 
-    io.imshow(binary)
-    io.show()
+    #io.imshow(binary)
+    #io.show()
     io.imsave(savename+'_original.png',binary*1)
 
     label_arr, num_seg = ndi.label(np.invert(binary))
     print("number of segments", num_seg)
     segments = np.arange(1,num_seg+1)
-    return binary,np.array(label_arr),segments
+    return binary,np.array(label_arr),segments,image
 
 def plot_image(label_arr):
     plt.subplots(ncols=1, nrows=1, figsize=(8, 8))
@@ -49,8 +51,8 @@ def plot_image(label_arr):
 
 
 def plot_numbered_image(label_arr,savename=''):
-    colors = np.array(list(chain(mcolors.CSS4_COLORS.values())))
-    np.repeat(colors,2)                                         ### put in repeat for large sets
+    colors = np.array(list(chain(mcolors.TABLEAU_COLORS.values())))
+    # np.repeat(colors,2)                                         ### put in repeat for large sets
     pixarray=np.rot90(label_arr,3)
     imax,jmax = pixarray.shape
     fig,ax=plt.subplots(ncols=1, nrows=1, figsize=(20,int(20*jmax/imax)))
@@ -61,7 +63,7 @@ def plot_numbered_image(label_arr,savename=''):
         for j in range(jmax):
             val = pixarray[i][j]
             if val != 0:
-                ax.text(i,j,val,fontsize=10,color=colors[val])
+                ax.text(i,j,val,fontsize=20,color=colors[val])
     plt.xticks([])
     plt.yticks([])            
     plt.show()
@@ -83,7 +85,8 @@ def convert_inkml(directory, out_folder):
 def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc='export/'):
     nrows = 28
     ncolumns = 28
-    found = label_arr == segment    #plt.imshow(found)
+    found = label_arr == segment    
+    #plt.imshow(found)
     x,y = np.where(found)
     xmin,xmax,ymin,ymax = np.min(x),np.max(x),np.min(y),np.max(y)
     xlen,ylen = found[xmin:xmax,ymin:ymax].shape
@@ -102,26 +105,30 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
         if xlen>ylen: ymax+=diff
         elif ylen>xlen: xmax+=diff
 
+    prediction=None
     digit = np.invert(binary_arr[xmin:xmax,ymin:ymax])
-    # digit = np.invert(label_arr[xmin:xmax,ymin:ymax])
+    #digit = np.invert(label_arr[xmin:xmax,ymin:ymax])
     digit = np.pad(digit,int(len(digit)*.2))
     xlen,ylen = digit.shape
-    if ylen/xlen>1.2 or ylen/xlen<0.8:
-        ax.set_visible(False)
-        return None  
+    if ylen==0:
+        if plot: ax.set_visible(False)
+        return None,[ymin,prediction],xmin,digit  
+    if xlen/ylen>1.2 or xlen/ylen<0.8:
+        if plot: ax.set_visible(False)
+        return None,[ymin,prediction],xmin,digit  
     tempfile = direc+str(segment)+'.png'
     Image.fromarray(digit).save(tempfile)
     if count_seg(tempfile)>=2:
-        ax.set_visible(False)
-        return None
+        if plot: ax.set_visible(False)
+        return None,[ymin,prediction],xmin,digit
     img = cv2.resize(cv2.imread(tempfile,cv2.IMREAD_GRAYSCALE),(nrows,ncolumns),interpolation=cv2.INTER_CUBIC)
 
-    prediction=''
+
     if model!=None: 
         prediction = model.predict(img.flatten().reshape(1,-1))[0]
         predicted = '  Prediction: '+str(prediction)    
         
-    else: predicted= ''
+    else: predicted= None
     if plot==True:
         if ax!= None:
             ax.imshow(digit,cmap='Greys_r')
@@ -131,5 +138,27 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
             plt.imshow(digit,cmap='Greys_r')
             plt.title('Segment #'+str(segment)+predicted,fontsize=15)
 
-    return img,prediction,xmin,digit
+    return img,[ymin,prediction],digit
+    
+
+
+def process_image(filename,dirname,fitted_clf,plot=False):
+    binary_arr,label_arr, segments,orig = label_segments(filename,dirname)
+    # plot_numbered_image(label_arr,dirname)
+    temp = 'tempimgs/'
+    predicted=[]    
+    if plot:
+        fig,axes = plt.subplots(len(segments),1,figsize=(5,len(segments)*5))
+        for seg,ax in list(zip(segments,axes.flatten())):
+            predicted.append(crop_image(seg,label_arr,orig,ax=ax,plot=True,model=fitted_clf,direc=temp)[1])
+        fig.savefig(dirname+'_predictions.png')
+    else:
+        for seg in segments:
+            predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp)[1])
+    try:
+        predicted.sort()
+        pred = [p[1] for p in predicted]
+    except:
+        pred = predicted
+    return pred
     

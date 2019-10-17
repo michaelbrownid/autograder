@@ -1,24 +1,46 @@
-#     plt.figure(figsize=(20,10))
-#     cols = 5
-#   for i in range(cols):
-#         plt.subplot(5/cols+1,cols,i+1)
-#         plt.imshow(X[i])
-#         plt.title('Digit: '+str(y[i]),fontsize=20)
 
+import numpy as np
+from PIL import Image
 from keras.datasets import mnist
 (X_tr,y_tr),(X_ts,y_ts) = mnist.load_data()
 
+def stack_imgs(row):
+    stacked = np.hstack([Image.fromarray(img) for img in row])
+    return Image.fromarray(255-stacked)
+
+
 def grab_indices(indices,n,index_list):
-    indices = list(np.arange(len(X_ts)))
+    indices = list(np.arange(len(indices)))
     sel = np.random.choice(indices,4,replace=False)
     for ind in sel:
-        del indices[ind]
+        indices.remove(ind)
     index_list.append(sel)
     del sel
     return indices,index_list
 
-def make_stuff():
+def make_stuff(n=4):
+    # (a,c),(b,d) = mnist.load_data()
+    # X_ts = np.concatenate((a,b))
+    # y_ts = np.concatenate((c,d))
     index_list=[]
-    indices = list(np.arange(len(X_ts)))
-    for i in range(int(len(X_ts)/4)):
-        indices,index_list = grab_indices(indices,4,index_list)
+    indices = list(np.arange(len(X_ts))) 
+    for i in range(int(len(X_ts)/n)):
+        indices,index_list = grab_indices(indices,n,index_list)
+    unlabeled_pics = [ stack_imgs(row) for row in X_ts[index_list]]
+    labeled_foursomes = list(zip(unlabeled_pics,y_ts[index_list]))
+    labeled_foursomes = np.array(labeled_foursomes)
+    return make_png(labeled_foursomes,savedir='generated_imageset/')
+
+
+def make_png(labeled_foursomes,savedir='generated_imageset/'):
+    file_list = []
+    targets = []
+    for i,img in enumerate(labeled_foursomes):
+        truth = img[1]
+        truth = ''.join([str(ans) for ans in truth])
+        path = savedir+'merge_'+str(len(img[1]))+'_'+str(i)+'____'+truth+'.png'
+        img[0].save(path)
+        file_list.append(path)
+        targets.append(img[1])
+    return list(zip(file_list,targets))
+
