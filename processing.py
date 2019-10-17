@@ -9,6 +9,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (20,6)
 
+from scipy.misc import imresize
 import inkml.inkml2img as conv
 from itertools import chain
 from math import ceil 
@@ -17,7 +18,15 @@ import os
 
 colors = np.array(list(chain(mcolors.CSS4_COLORS.values())))
 
-def label_segments(filename):
+def count_seg(filename):
+    image = io.imread(filename)
+    gray_image = color.rgb2gray(np.invert(image))
+    thresh = filters.threshold_mean(gray_image)
+    binary = gray_image > thresh
+    label_arr, num_seg = ndi.label(np.invert(binary))
+    return num_seg
+
+def label_segments(filename,savename=''):
     image = io.imread(filename)
     gray_image = color.rgb2gray(image)
     thresh = filters.threshold_mean(gray_image)
@@ -25,6 +34,7 @@ def label_segments(filename):
 
     io.imshow(binary)
     io.show()
+    io.imsave(savename+'_original.png',binary*1)
 
     label_arr, num_seg = ndi.label(np.invert(binary))
     print("number of segments", num_seg)
@@ -38,11 +48,12 @@ def plot_image(label_arr):
     plt.show()
 
 
-def plot_numbered_image(label_arr):
-    np.random.shuffle(colors)
+def plot_numbered_image(label_arr,savename=''):
+    colors = np.array(list(chain(mcolors.CSS4_COLORS.values())))
+    np.repeat(colors,2)                                         ### put in repeat for large sets
     pixarray=np.rot90(label_arr,3)
     imax,jmax = pixarray.shape
-    plt.subplots(ncols=1, nrows=1, figsize=(20,int(20*jmax/imax)))
+    fig,ax=plt.subplots(ncols=1, nrows=1, figsize=(20,int(20*jmax/imax)))
     plt.xticks(np.arange(0,imax))
     plt.yticks(np.arange(0,jmax))
     np.random.shuffle(colors)
@@ -50,10 +61,11 @@ def plot_numbered_image(label_arr):
         for j in range(jmax):
             val = pixarray[i][j]
             if val != 0:
-                plt.text(i,j,val,fontsize=10,color=colors[val])
+                ax.text(i,j,val,fontsize=10,color=colors[val])
     plt.xticks([])
     plt.yticks([])            
     plt.show()
+    fig.savefig(savename+'_segmented.png')
 
 def convert_inkml(directory, out_folder):
     ink_files = []
@@ -68,7 +80,9 @@ def convert_inkml(directory, out_folder):
 
 
 
-def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None):
+def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc='export/'):
+    nrows = 28
+    ncolumns = 28
     found = label_arr == segment    #plt.imshow(found)
     x,y = np.where(found)
     xmin,xmax,ymin,ymax = np.min(x),np.max(x),np.min(y),np.max(y)
@@ -90,23 +104,31 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None):
 
     digit = np.invert(binary_arr[xmin:xmax,ymin:ymax])
     digit = np.pad(digit,int(len(digit)*.2))
-    # xlen,ylen = digit.shape
-    # if ylen/xlen>1.2 or ylen/xlen<0.8:
-    #     return None  
+    xlen,ylen = digit.shape
+    if ylen/xlen>1.2 or ylen/xlen<0.8:
+        ax.set_visible(False)
+        return None  
+    tempfile = direc+str(segment)+'.png'
+    Image.fromarray(digit).save(tempfile)
+    if count_seg(tempfile)>=2:
+        ax.set_visible(False)
+        return None
+    img = cv2.resize(cv2.imread(tempfile,cv2.IMREAD_GRAYSCALE),(nrows,ncolumns),interpolation=cv2.INTER_CUBIC)
 
-    img = Image.fromarray(digit,'P')
-    img = np.resize(img, (28,28))
+    prediction=''
     if model!=None: 
-        prediction = model.predict(img.reshape(1,-1))[0]
-        predicted = '\nPrediction: '+str(prediction)    
+        prediction = model.predict(img.flatten().reshape(1,-1))[0]
+        predicted = '  Prediction: '+str(prediction)    
+        
     else: predicted= ''
     if plot==True:
         if ax!= None:
             ax.imshow(digit,cmap='Greys_r')
-            ax.set_title('Segment #'+str(segment)+predicted,fontsize=20)
+            ax.set_title('Segment #'+str(segment)+predicted,fontsize=15)
             
         else:
             plt.imshow(digit,cmap='Greys_r')
-            plt.title('Segment #'+str(segment)+predicted,fontsize=20)
+            plt.title('Segment #'+str(segment)+predicted,fontsize=15)
 
-    return prediction,xmin
+    return img,prediction,xmin,digit
+    
