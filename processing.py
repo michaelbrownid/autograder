@@ -103,6 +103,7 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
         elif ylen>xlen: xmax+=diff
 
     digit = np.invert(binary_arr[xmin:xmax,ymin:ymax])
+    # digit = np.invert(label_arr[xmin:xmax,ymin:ymax])
     digit = np.pad(digit,int(len(digit)*.2))
     xlen,ylen = digit.shape
     if ylen/xlen>1.2 or ylen/xlen<0.8:
