@@ -2,7 +2,7 @@
 import numpy as np
 from PIL import Image
 from keras.datasets import mnist
-(X_tr,y_tr),(X_ts,y_ts) = mnist.load_data()
+
 
 def stack_imgs(row):
     stacked = np.hstack([Image.fromarray(img) for img in row])
@@ -18,10 +18,10 @@ def grab_indices(indices,n,index_list):
     del sel
     return indices,index_list
 
-def make_stuff(n=4):
-    # (a,c),(b,d) = mnist.load_data()
-    # X_ts = np.concatenate((a,b))
-    # y_ts = np.concatenate((c,d))
+def make_stuff(X_ts=None,n=4):
+    (a,c),(b,d) = mnist.load_data()
+    X_ts = np.concatenate((a,b))
+    y_ts = np.concatenate((c,d))    
     index_list=[]
     indices = list(np.arange(len(X_ts))) 
     for i in range(int(len(X_ts)/n)):

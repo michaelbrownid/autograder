@@ -4,7 +4,10 @@ from scipy import ndimage as ndi
 from PIL import Image
 import cv2
 
+from clf import get_clf
+from generate_dataset import *
 import numpy as np
+import pandas as pd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (20,6)
@@ -15,6 +18,13 @@ from itertools import chain
 from math import ceil 
 import subprocess
 import os
+
+
+from sklearn import svm
+from matplotlib.colors import Normalize
+
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
 
 colors = np.array(list(chain(mcolors.BASE_COLORS.values())))        ##mcolors.CSS4_COLORS
 
@@ -33,13 +43,12 @@ def label_segments(filename,savename=''):
     gray_image = color.rgb2gray(image)
     thresh = filters.threshold_mean(gray_image)
     binary = gray_image > thresh
-
-    #io.imshow(binary)
-    #io.show()
+    # io.imshow(binary)
+    # io.show()
     io.imsave(savename+'_original.png',binary*1)
 
     label_arr, num_seg = ndi.label(np.invert(binary))
-    print("number of segments", num_seg)
+    #print("number of segments", num_seg)
     segments = np.arange(1,num_seg+1)
     return binary,np.array(label_arr),segments,image
 
@@ -82,7 +91,7 @@ def convert_inkml(directory, out_folder):
 
 
 
-def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc='export/'):
+def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc='export/',svc=False):
     nrows = 28
     ncolumns = 28
     found = label_arr == segment    
@@ -107,7 +116,6 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
 
     prediction=None
     digit = np.invert(binary_arr[xmin:xmax,ymin:ymax])
-    #digit = np.invert(label_arr[xmin:xmax,ymin:ymax])
     digit = np.pad(digit,int(len(digit)*.2))
     xlen,ylen = digit.shape
     if ylen==0:
@@ -122,10 +130,14 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
         if plot: ax.set_visible(False)
         return None,[ymin,prediction],xmin,digit
     img = cv2.resize(cv2.imread(tempfile,cv2.IMREAD_GRAYSCALE),(nrows,ncolumns),interpolation=cv2.INTER_CUBIC)
-
+    
 
     if model!=None: 
-        prediction = model.predict(img.flatten().reshape(1,-1))[0]
+        if svc:
+            scaler = StandardScaler()
+            prediction = model.predict(scaler.fit_transform(img).flatten().reshape(1,-1))[0]
+        else:
+            prediction = model.predict(img.flatten().reshape(1,-1))[0]
         predicted = '  Prediction: '+str(prediction)    
         
     else: predicted= None
@@ -142,7 +154,7 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
     
 
 
-def process_image(filename,dirname,fitted_clf,plot=False):
+def process_image(filename,dirname,fitted_clf,plot=False,svc=False):
     binary_arr,label_arr, segments,orig = label_segments(filename,dirname)
     # plot_numbered_image(label_arr,dirname)
     temp = 'tempimgs/'
@@ -150,15 +162,43 @@ def process_image(filename,dirname,fitted_clf,plot=False):
     if plot:
         fig,axes = plt.subplots(len(segments),1,figsize=(5,len(segments)*5))
         for seg,ax in list(zip(segments,axes.flatten())):
-            predicted.append(crop_image(seg,label_arr,orig,ax=ax,plot=True,model=fitted_clf,direc=temp)[1])
+
+            predicted.append(crop_image(seg,label_arr,orig,ax=ax,plot=True,model=fitted_clf,direc=temp,svc=svc)[1])
         fig.savefig(dirname+'_predictions.png')
     else:
         for seg in segments:
-            predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp)[1])
+            if svc:
+                predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp,svc=True)[1])
+            else:
+                predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp,svc=False)[1])
     try:
         predicted.sort()
         pred = [p[1] for p in predicted]
     except:
         pred = predicted
-    return pred
-    
+    return np.array(pred)
+
+
+def setdiff(x):
+    return x['truth']==x['predict']
+
+def main(prepared=False,svc=False,fitted_clf=None):
+    (X_tr,y_tr),(X_ts,y_ts) = mnist.load_data()   
+    if fitted_clf==None:
+        yhat, acc,fitted_clf =  get_clf(X_tr,X_ts,y_tr,y_ts)
+    if prepared == False:
+        dataset = make_stuff(X_ts[:2000])
+        results = pd.DataFrame(dataset)
+    else:
+        results = pd.DataFrame(prepared)
+    results.columns = ['image','truth']
+    predictions = []
+    for index,image in enumerate(results['image']):
+        matname = 'SVC/output__'+str(index)
+        predictions.append(process_image(image,matname,fitted_clf,svc=svc))
+
+    predictions=np.array(predictions)
+    results['predict'] = predictions
+    results['correct']=results.apply(setdiff,axis=1)
+    results.to_csv('results_SVC.csv')
+    return results
