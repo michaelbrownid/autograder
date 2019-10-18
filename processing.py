@@ -59,7 +59,7 @@ def plot_image(label_arr):
     plt.show()
 
 
-def plot_numbered_image(label_arr,savename=''):
+def plot_numbered_image(label_arr,savename='',no_rotate=False):
     colors = np.array(list(chain(mcolors.TABLEAU_COLORS.values())))
     # np.repeat(colors,2)                                         ### put in repeat for large sets
     pixarray=np.rot90(label_arr,3)
@@ -202,3 +202,19 @@ def main(prepared=False,svc=False,fitted_clf=None):
     results['correct']=results.apply(setdiff,axis=1)
     results.to_csv('results_SVC.csv')
     return results
+
+
+def getscore(x):
+    if x['string']=='False':
+        return -10
+    else:
+        return x['string'].count('True')/4
+        
+def process_results(results4):
+    results4['string']= results4.correct.astype(str)
+    results4['score'] = results4.apply(getscore,axis=1)    
+    mismatched = results4[results4.score<0]
+    mainset = results4[results4.score>=0]
+    mismatched.drop('string',axis=1,inplace=True)
+    mainset.drop('string',axis=1,inplace=True)
+    return results4, mismatched, mainset

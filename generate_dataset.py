@@ -18,10 +18,10 @@ def grab_indices(indices,n,index_list):
     del sel
     return indices,index_list
 
-def make_stuff(X_ts=None,n=4):
+def make_stuff(X_ts=None,n=4,size=None):
     (a,c),(b,d) = mnist.load_data()
-    X_ts = np.concatenate((a,b))
-    y_ts = np.concatenate((c,d))    
+    X_ts = np.concatenate((a,b))[:size]
+    y_ts = np.concatenate((c,d))[:size]    
     index_list=[]
     indices = list(np.arange(len(X_ts))) 
     for i in range(int(len(X_ts)/n)):
