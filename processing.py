@@ -91,7 +91,7 @@ def convert_inkml(directory, out_folder):
 
 
 
-def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc='export/',svc=False):
+def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc='export/',svc=False,tf=False):
     nrows = 28
     ncolumns = 28
     found = label_arr == segment    
@@ -124,18 +124,19 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
     if xlen/ylen>1.2 or xlen/ylen<0.8:
         if plot: ax.set_visible(False)
         return None,[ymin,prediction],xmin,digit  
-    tempfile = direc+str(segment)+'.png'
+    tempfile = direc+str(segment)+'.jpg'
     Image.fromarray(digit).save(tempfile)
     if count_seg(tempfile)>=2:
         if plot: ax.set_visible(False)
         return None,[ymin,prediction],xmin,digit
     img = cv2.resize(cv2.imread(tempfile,cv2.IMREAD_GRAYSCALE),(nrows,ncolumns),interpolation=cv2.INTER_CUBIC)
-    
-
     if model!=None: 
-        if svc:
+        if tf:
+            prediction = np.argmax(model.predict(img.astype(float).flatten().reshape((1, 28, 28, 1))))      
+        elif svc:
             scaler = StandardScaler()
             prediction = model.predict(scaler.fit_transform(img).flatten().reshape(1,-1))[0]
+
         else:
             prediction = model.predict(img.flatten().reshape(1,-1))[0]
         predicted = '  Prediction: '+str(prediction)    
@@ -154,7 +155,7 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
     
 
 
-def process_image(filename,dirname,fitted_clf,plot=False,svc=False):
+def process_image(filename,dirname,fitted_clf,plot=False,svc=False,tf=False):
     binary_arr,label_arr, segments,orig = label_segments(filename,dirname)
     # plot_numbered_image(label_arr,dirname)
     temp = 'tempimgs/'
@@ -163,14 +164,16 @@ def process_image(filename,dirname,fitted_clf,plot=False,svc=False):
         fig,axes = plt.subplots(len(segments),1,figsize=(5,len(segments)*5))
         for seg,ax in list(zip(segments,axes.flatten())):
 
-            predicted.append(crop_image(seg,label_arr,orig,ax=ax,plot=True,model=fitted_clf,direc=temp,svc=svc)[1])
+            predicted.append(crop_image(seg,label_arr,orig,ax=ax,plot=True,model=fitted_clf,direc=temp,svc=svc,tf=tf)[1])
         fig.savefig(dirname+'_predictions.png')
     else:
         for seg in segments:
-            if svc:
-                predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp,svc=True)[1])
+            if tf:
+                predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp,svc=False,tf=True)[1])            
+            elif svc:
+                predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp,svc=True,tf=False)[1])
             else:
-                predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp,svc=False)[1])
+                predicted.append(crop_image(seg,label_arr,orig,model=fitted_clf,direc=temp,svc=False,tf=False)[1])
     try:
         predicted.sort()
         pred = [p[1] for p in predicted]
@@ -182,11 +185,11 @@ def process_image(filename,dirname,fitted_clf,plot=False,svc=False):
 def setdiff(x):
     return x['truth']==x['predict']
 
-def main(prepared=False,svc=False,fitted_clf=None):
+def main(prepared=0,svc=False,fitted_clf=None,tf=False):
     (X_tr,y_tr),(X_ts,y_ts) = mnist.load_data()   
     if fitted_clf==None:
         yhat, acc,fitted_clf =  get_clf(X_tr,X_ts,y_tr,y_ts)
-    if prepared == False:
+    if prepared.all() == 0:
         dataset = make_stuff(X_ts[:2000])
         results = pd.DataFrame(dataset)
     else:
@@ -194,13 +197,14 @@ def main(prepared=False,svc=False,fitted_clf=None):
     results.columns = ['image','truth']
     predictions = []
     for index,image in enumerate(results['image']):
-        matname = 'SVC/output__'+str(index)
-        predictions.append(process_image(image,matname,fitted_clf,svc=svc))
+        matname = 'tf22/output__'+str(index)
+        print(image)
+        predictions.append(process_image(image,matname,fitted_clf,svc=svc,tf=tf))
 
     predictions=np.array(predictions)
     results['predict'] = predictions
     results['correct']=results.apply(setdiff,axis=1)
-    results.to_csv('results_SVC.csv')
+    results.to_csv('results_TF.csv')
     return results
 
 
