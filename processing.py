@@ -3,6 +3,7 @@ from skimage import filters, color
 from scipy import ndimage as ndi
 from PIL import Image
 import cv2
+import tensorflow as tf
 
 from clf import get_clf
 from generate_dataset import *
@@ -45,8 +46,9 @@ def label_segments(filename,savename=''):
     binary = gray_image > thresh
     # io.imshow(binary)
     # io.show()
-    io.imsave(savename+'_original.png',binary*1)
-
+    #io.imsave(savename+'_original.png',binary*1)
+    binary = tf.image.convert_image_dtype(binary*1, dtype=tf.uint8)  ##suppresses warning of lossy conversion
+    io.imsave(savename+'_original.png',binary)
     label_arr, num_seg = ndi.label(np.invert(binary))
     #print("number of segments", num_seg)
     segments = np.arange(1,num_seg+1)
@@ -179,7 +181,17 @@ def process_image(filename,dirname,fitted_clf,plot=False,svc=False,tf=False):
         pred = [p[1] for p in predicted]
     except:
         pred = predicted
-    return np.array(pred)
+    while(len(pred)>4):
+        try:
+                pred.remove(None)
+        except:
+            try: 
+                pred.remove(3)
+            except:
+                pred.pop()
+    result = np.array(pred)
+    edited = np.where(result==None, 1, result)
+    return edited
 
 
 def setdiff(x):
