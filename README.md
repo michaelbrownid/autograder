@@ -27,7 +27,6 @@ PIL image from raw image file
      style="float: left; margin-right: 10px;" />
 
      
-     
 #### Issue: Segmentation fails. 
 Results in 4000+ segments (expected 4) due to noisy, non-white background. 
 <br>Dots are each considered separate segments. Requires processing.
