@@ -23,7 +23,7 @@ Image taken from smartphone
      
 #### Preprocessed Image
 PIL image from raw image file
-<img src="images/0734_preprocessed.jpg"
+<img src="images/0734_preprocessed.png"
      style="float: left; margin-right: 10px;" />
 
 #### Binary Image
@@ -36,13 +36,13 @@ Preprocessed image converted to binary
 
 #### Preprocessed Image
 PIL image from raw image file
-<img src="images/0734_postprocessed.jpg"
+<img src="images/0734_postprocessed.png"
      style="float: left; margin-right: 10px;" />
      
      
 #### Segmented Image
 Proper segmentationg using skimage package
-<img src="images/0734_segmented.jpg"
+<img src="images/0734_segmented.png"
      style="float: left; margin-right: 10px;" />
     
  
