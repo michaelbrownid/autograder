@@ -16,31 +16,29 @@ Microsoft has very strong on-the-fly penstroke capturing software, Windows Ink. 
 
 ## Image Processing
 
-#### Raw Image
+### Raw Image
 Image taken from smartphone
 <img src="images/0734.jpg"
      style="float: left; margin-right: 10px;" />
      
-#### Preprocessed Image
+### Preprocessed Image
 PIL image from raw image file
 <img src="images/0734_preprocessed.png"
      style="float: left; margin-right: 10px;" />
 
-#### Binary Image
-Preprocessed image converted to binary
-<img src="images/0734_original.jpg"
-     style="float: left; margin-right: 10px;" />
      
      
-#### Note: Segmentation fails. Results in 4000+ segments (expected 4) due to noisy, non-white background. Requires processing.
+#### Issue: Segmentation fails. 
+Results in 4000+ segments (expected 4) due to noisy, non-white background. 
+<br>Dots are each considered separate segments. Requires processing.
 
-#### Preprocessed Image
+### Preprocessed Image
 PIL image from raw image file
 <img src="images/0734_postprocessed.png"
      style="float: left; margin-right: 10px;" />
      
      
-#### Segmented Image
+### Segmented Image
 Proper segmentationg using skimage package
 <img src="images/0734_segmented.png"
      style="float: left; margin-right: 10px;" />
