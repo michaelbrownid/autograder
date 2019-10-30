@@ -21,7 +21,7 @@ Image taken from smartphone
 <img src="images/0734.jpg"
      style="float: left; margin-right: 10px;" />
      
-### Preprocessed Image
+### Preprocessing
 PIL image from raw image file
 <img src="images/0734_preprocessed.png"
      style="float: left; margin-right: 10px;" />
@@ -31,7 +31,7 @@ PIL image from raw image file
 Results in 4000+ segments (expected 4) due to noisy, non-white background. 
 <br>Dots are each considered separate segments. Requires processing.
 
-### Preprocessed Image
+### Preprocessing
 PIL image from raw image file
 <img src="images/0734_postprocessed.png"
      style="float: left; margin-right: 10px;" />
