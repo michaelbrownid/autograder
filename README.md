@@ -38,7 +38,7 @@ PIL image from raw image file
      
      
 ### Segmented Image
-Proper segmentationg using skimage package
+Proper segmentation using skimage package
 <img src="images/0734_segmented.png"
      style="float: left; margin-right: 10px;" />
     
