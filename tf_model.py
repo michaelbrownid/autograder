@@ -27,6 +27,9 @@ def load_model():
     # print('\nTest accuracy {:5.2f}%'.format(100*test_acc))
     return model
 
+def get_labeled():
+    
+
 
 if __name__ == '__main__': 
     from datetime import datetime

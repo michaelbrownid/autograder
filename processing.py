@@ -39,9 +39,13 @@ def count_seg(filename):
     label_arr, num_seg = ndi.label(np.invert(binary))
     return num_seg
 
-def label_segments(filename,savename='',photo=False,marker=True):
+def label_segments(filename,savename='',photo=False,marker=False):
+    alpha=1.6
+    beta=10
     image = io.imread(filename)
-    image = cv2.blur(image, (10, 10)) 
+    image = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    if marker==False:
+        image = cv2.blur(image, (10, 10)) 
     io.imshow(image)
 #     io.imshow(image)
     if photo:
@@ -49,7 +53,7 @@ def label_segments(filename,savename='',photo=False,marker=True):
         gray_image = color.rgb2gray(arrraaayyy)
         meaaannn = np.mean(gray_image)
         if marker:
-            binary = gray_image>(meaaannn*.65)
+            binary = gray_image>(meaaannn*.9)
         else:
             binary = gray_image>(meaaannn*.9)
         huh = (binary==1)*0+(binary==0)*1
@@ -136,16 +140,14 @@ def crop_image(segment,label_arr,binary_arr,ax=None,plot=False,model=None,direc=
         elif ylen>xlen: xmax+=diff
 
     prediction=None
-#     digit = np.invert(binary_arr[xmin:xmax,ymin:ymax])
     digit = binary_arr[xmin:xmax,ymin:ymax]
     digit = np.pad(digit,int(len(digit)*.2),mode= 'constant', constant_values=(1,1))  
-#     io.imshow(digit)
-#     print(digit)
+
     try:
         xlen,ylen = digit.shape
     except:
         return
-    if ylen==0:
+    if ylen<20 or xlen<20 or np.mean(digit)<.02:
         if plot: ax.set_visible(False)
         return None,[ymin,prediction],xmin,digit  
     if xlen/ylen>1.2 or xlen/ylen<0.8:
