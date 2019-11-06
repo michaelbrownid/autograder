@@ -1,0 +1,6 @@
+classes=10
+train=./data/images/testmarker/testmarker_12img.txt
+valid=./data/images/testmarker/testmarker_12img.txt
+names=data/testmarker.names
+backup=backup/
+eval=testmarker
