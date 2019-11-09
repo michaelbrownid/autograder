@@ -13,10 +13,11 @@ matplotlib.rcParams.update({'figure.max_open_warning': 0})
 
 import processing as proc
 
+
 import tensorflow as tf
-from tensorflow.keras import layers
+# from tensorflow.python.keras import layers
 keras = tf.keras
-AUTOTUNE = tf.data.experimental.AUTOTUNE ## tf.data transformation parameters
+# AUTOTUNE = tf.data.experimental.AUTOTUNE ## tf.data transformation parameters
 import matplotlib.pyplot as plt
 import pickle
 import pandas as pd
@@ -25,10 +26,12 @@ import os
 import shutil  
 
 
-def predict(tf_model, image):
+
+
+def predict_tf(tf_model, image):
     matname = 'data/predictions__img'
     print('processing ',image)
-    binary_arr,label_arr, segments,orig = proc.label_segments(image,matname,photo=True,marker=False)
+    binary_arr,label_arr, segments,orig = proc.label_segments(image,matname,photo=True,marker=True)
     os.remove(image)
     predicted = []
     fig,axes = plt.subplots(len(segments),figsize=(6,6*len(segments)))
@@ -70,12 +73,14 @@ def predict(tf_model, image):
 
     predicted.sort()    
     predicted = [pr[1] for pr in predicted]
+    plt.close('all')
     return predicted
 
 if __name__ == "__main__":
-    tf_model = keras.models.load_model('static/tf_model.h5')
+    tf_model = keras.models.load_model('static/mnist_hasyv2_master_20epochs_batch64_201911081573209782.h5')  #tf_model.h5
     oldfilename = '/home/nina/Downloads/imagename.png'
-    filename = 'imagename.png'
+    filename = '/home/nina/autograder/my_app/imagename.png'
+    
     shutil.move(oldfilename,filename)
-    predictions = predict(tf_model,filename)
+    predictions = predict_tf(tf_model,filename)
     print(predictions)

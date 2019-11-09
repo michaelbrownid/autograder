@@ -3,7 +3,7 @@ from skimage import filters, color
 from scipy import ndimage as ndi
 from PIL import Image
 import cv2
-import tensorflow as tf
+
 
 
 import numpy as np
@@ -12,7 +12,6 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (20,6)
 
-from scipy.misc import imresize
 from itertools import chain
 from math import ceil 
 import subprocess
@@ -39,14 +38,17 @@ def count_seg(filename):
 
 def label_segments(filename,savename='',photo=False,marker=False):
     alpha=1.1
-    beta=-3
-    image = cv2.imread(filename)
+    beta=0
+    image = cv2.imread(filename,cv2.IMREAD_GRAYSCALE)
     image = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
     if marker==False:
-        image = cv2.blur(image, (8, 8))
-    fig,axes = plt.subplots(1,figsize=(20,10))
-    axes.imshow(image,cmap='gray')
-    axes.set_title('Raw Image')         
+        try:
+            image = cv2.blur(image, (8, 8))
+        except:
+            pass
+    # fig,axes = plt.subplots(1,figsize=(20,10))
+    # axes.imshow(image,cmap='gray')
+    # axes.set_title('Raw Image')         
     if photo:
         arrraaayyy = np.array(image)
         gray_image = color.rgb2gray(arrraaayyy)
