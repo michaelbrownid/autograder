@@ -21,11 +21,10 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 
 - [Product Design](#product-design)
-    - [General](#general-design)
-    - [Detailed](#detailed-design)
 - [Data Sources](#data-sources)
-    - [Upload the page tree file](#upload-the-page-tree-file)
-    - [Go to the import view](#go-to-the-import-view)
+- [Obtaining Data](#obtaining-data)
+    - [MNIST](#MNIST)
+    - [HASYv2](#HASYv2)
     - [Import the uploaded page tree file](#import-the-uploaded-page-tree-file)
 - [Preprocessing](#image-processing)
     - [TER](#typo3-extension-repository)
@@ -41,12 +40,26 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 
 # Data Sources
-| Name | Description | Link | Usage |
+Detailed instructions for obtaining data is provided below. Use link under "Name" column.
+| Name | Description | Link | Usage | 
 | --- | --- | --- | --- |
-| MNIST | Well-known repository for handwritten digits | http://yann.lecun.com/exdb/mnist/ | Training |
-| HASYv2 | Over 150,000 handwritten characters <br>(including LaTeX mathematical symbols) | https://zenodo.org/record/259444 | Training |
-| Kenasata | Over 16,000 labeled handwritten digits <br>(includes gender, country, age) | https://github.com/kensanata/numbers | Testing |
-| CROHME | Competition on Recognition of Online Handwritten <br>Mathematical Expressions (InkML format) |https://www.isical.ac.in/~crohme/CROHME_data.html | Future Directions |
+| [MNIST](#MNIST) | Well-known repository for handwritten digits | http://yann.lecun.com/exdb/mnist/ | Training |
+| [HASYv2](#HASYv2) | Over 150,000 handwritten characters (including LaTeX mathematical symbols) | https://zenodo.org/record/259444 | Training |
+| Kenasata | Over 16,000 labeled handwritten digits (includes gender, country, age) | https://github.com/kensanata/numbers | Testing |
+| CROHME | Competition on Recognition of Online Handwritten Mathematical Expressions (InkML format) |https://www.isical.ac.in/~crohme/CROHME_data.html | Future Directions |
+
+
+
+## Image Processing
+
+
+| Stage | Image | Issues |
+| --- | --- | --- | 
+| Raw Image | ![raw-image](images/0734.jpg "Raw Image" ) | From the human eye, 4 distinct segments are readily apparent. However, shadows and other subtle artifacts are detected by the computer as objects.  | 
+| Preprocessed Binary | ![binary-image](images/0734_original.jpg "Binary Image" ) | Results in 4000+ segments (expected 4) due to noisy, non-white background. Dots are each considered separate segments. Requires processing. | 
+| Postprocessed Binary | ![processed-image](images/postprocessed_binary.jpg "Processed Image" ) | Adjusting alpha levels and gaussian blurring reduces noise from raw image. Segmentation ready.  | 
+| Segmented Image | ![segmented-image](images/0734_segmented.png "Segmented Image" ) | Proper segmentation detects 4 objects.  | 
+
 
 ## Obtaining Data
 #### MNIST
@@ -73,16 +86,26 @@ y = digits.target
 ```
 
 
+# Running the app
+Clone repo via SSH or HTTPS
+```
+# using SSH
+git clone git@github.com:aprettyloner/autograder.git
 
+# using HTTPS
+git clone https://github.com/aprettyloner/autograder.git
+```
 
+Install all dependencies
+```
+python3 -m pip install --user --upgrade pip
+pip install -r requirements.txt
+```
 
-## Image Processing
-
-
-| Stage | Image | Issues |
-| --- | --- | --- | 
-| Raw Image | ![raw-image](images/0734.jpg "Raw Image" ) | From the human eye, 4 distinct segments are readily apparent. However, shadows and other subtle artifacts are detected by the computer as objects.  | 
-| Preprocessed Binary | ![binary-image](images/0734_original.jpg "Binary Image" ) | Results in 4000+ segments (expected 4) due to noisy, non-white background. Dots are each considered separate segments. Requires processing. | 
-| Postprocessed Binary | ![processed-image](images/postprocessed_binary.jpg "Processed Image" ) | Adjusting alpha levels and gaussian blurring reduces noise from raw image. Segmentation ready.  | 
-| Segmented Image | ![segmented-image](images/0734_segmented.png "Segmented Image" ) | Proper segmentation detects 4 objects.  | 
-
+Run the app
+```
+cd autograder/my_app/
+export FLASK_APP=main.py
+export FLASK_DEBUG=1
+run flask
+```
