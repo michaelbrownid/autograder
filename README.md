@@ -4,15 +4,37 @@ Autograder for handwritten free-response answers using ML.
 
 
 ### Motivation
+<p>
+Hand-grading free-response questions is a daunting task for many teachers. Current technology allows for autograding of multiple-choice questions (e.g., Illuminate has built-in scoring and gradebook update capabilities). However, OCR-based handwriting recognition is not yet readily available to the public. This tool aims to alleviate the grading burden for teachers.\
+<!-- <img src="images/Nina_AutoGrader-1.png"
+     style="float: left; margin-right: 10px; width: 50px;" />
+<img src="images/Nina_AutoGrader-2.png"
+     style="float: left; margin-right: 10px; width: 50px;" /> -->
 
-Hand-grading free-response questions is a daunting task for many teachers. Current technology allows for autograding of multiple-choice questions (e.g., Illuminate has built-in scoring and gradebook update capabilities). However, OCR-based handwriting recognition is not yet readily available to the public. This tool aims to alleviate the grading burden for teachers.
+![](images/Nina_AutoGrader-1.png "project design") ![](images/Nina_AutoGrader-2.png "project design")
 
+</p>
 
 ### Inspiration
 
 Microsoft has very strong on-the-fly penstroke capturing software, Windows Ink. However, this technology is proprietary. I aim to create a lighter-weight, opensource tool with similar functionality. 
 
 
+
+## Table of content
+
+- [Preprocessing](#image-processing)
+    - [TER](#typo3-extension-repository)
+    - [Composer](#composer)
+- [TYPO3 setup](#typo3-setup)
+    - [Extension](#extension)
+    - [Database](#database)
+- [Page setup](#page-setup)
+    - [Upload the page tree file](#upload-the-page-tree-file)
+    - [Go to the import view](#go-to-the-import-view)
+    - [Import the uploaded page tree file](#import-the-uploaded-page-tree-file)
+- [License](#license)
+- [Links](#links)
 
 ## Image Processing
 
