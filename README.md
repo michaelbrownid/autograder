@@ -39,7 +39,7 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 
 # Data Sources
-Detailed instructions for obtaining data is provided below. Use link under "Name" column.
+Detailed instructions for obtaining data is provided below. Use link under "Name" column.<br>
 | Name | Description | Link | Usage | 
 | --- | --- | --- | --- |
 | [MNIST](#MNIST) | Well-known repository for handwritten digits | http://yann.lecun.com/exdb/mnist/ | Training |
@@ -49,7 +49,7 @@ Detailed instructions for obtaining data is provided below. Use link under "Name
 
 
 
-## Image Processing
+# Image Processing
 
 
 | Stage | Image | Issues |
