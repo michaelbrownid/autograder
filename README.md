@@ -20,12 +20,12 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 ## Table of contents
 
-- [Inspiration](#inspiration)
 - [Product Design](#product-design)
 - [Data Sources](#data-sources)
 - [Obtaining Data](#obtaining-data)
     - [MNIST](#MNIST)
     - [HASYv2](#HASYv2)
+    - [Kensanata](#Kensanata)
 - [Preprocessing](#image-processing)
 - [Build/Run App](#running-the-app)
 
@@ -60,11 +60,11 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 | Segmented Image | ![segmented-image](images/0734_segmented.png "Segmented Image" ) | Proper segmentation detects 4 objects.  | 
 
 
-## Obtaining Data
-#### MNIST
+# Obtaining Data
+## MNIST
 Data can be loaded using keras or sklearn.
 
-##### keras has the full MNIST set
+#### keras has the full MNIST set
 - 70,000 total images split into train (60K) and test (10K)
 - image size: 28 x 28 pixels
 
@@ -73,7 +73,7 @@ from tensorflow.keras.datasets import mnist
 (X_train,y_train),(X_test,y_test) = mnist.load_data()
 ```
 
-##### sklearn has a small subset of MNIST
+#### sklearn has a small subset of MNIST
 - 1,797 total images
 - image size: 8 x 8 pixels
 
@@ -84,10 +84,10 @@ X = digits.data
 y = digits.target
 ```
 
-#### HASYv2
+## HASYv2
 HASYv2 is an extensive dataset, primarily consisting of LaTeX images. The following code limits the dataset to digits (line 34).
 
-##### HASYv2 digit dataset
+#### HASYv2 digit dataset
 - 1,020 total images
 - image size: 32 x 32 pixels
 
@@ -97,13 +97,13 @@ from newDatasets import load_HASY
 X,y = load_HASY() 
 ```
 
-#### Kensanata
+## Kensanata
 Kensanata dataset includes interesting demographic data. There are ~17K digit images in the set. The [original file structure](https://github.com/kensanata/numbers) makes direct processing somewhat cumbersome. I have compiled the images into [a single directory](https://github.com/aprettyloner/autograder/tree/master/Kensanata). The naming schema has been retained to describe demographic information.
 - country: (ISO 3166 Alpha-2 codes) or XX if unknown (e.g. Switzerland is CH)
 - age: rounded to the nearest decade (e.g. 35 to 44 years is 4) or X if unknown
 - sex: (M for man, F for woman, X for unknown, O for other)
 
-##### Kensanata digit dataset
+#### Kensanata digit dataset
 - 16,994 total images
 - image size: varies
 
@@ -135,7 +135,7 @@ python3 -m pip install --user --upgrade pip
 pip install -r requirements.txt
 ```
 
-Run the app
+## Run the app
 ```
 cd autograder/my_app/
 export FLASK_APP=main.py
