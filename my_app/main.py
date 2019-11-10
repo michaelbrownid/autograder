@@ -3,13 +3,11 @@ import os
 import urllib.request
 from app import app
 from flask import Flask, flash, request, redirect, render_template
-from werkzeug.utils import secure_filename
-from PIL import Image
+
+
 from predict import predict_tf
-import tensorflow as tf
-keras = tf.keras
-import cv2
-from PIL import Image
+from predict import *
+
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -18,12 +16,20 @@ import boto3
 # Let's use Amazon S3
 s3 = boto3.resource('s3')
 
-tf_model = keras.models.load_model('static/mnist_hasyv2_master_20epochs_batch64_201911081573209782.h5')  #tf_model.h5
-#tf_model = keras.models.load_model('static/tf_model.h5')
+#tf_model = keras.models.load_model('static/mnist_hasyv2_master_20epochs_batch64_201911081573209782.h5')  #tf_model.h5
+tf_model = keras.models.load_model('static/tf_model.h5')
+#tf_model = models.load_model('static/mnist_hasyv2_master_20epochs_batch64__ALLDATA_201911081573211546.h5')
+
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-	
+
+@app.route('/testusb')
+def testusb():
+	# return render_template('upload.html')
+	return render_template('websample.html')
+
+
 @app.route('/')
 def upload_form():
 	# return render_template('upload.html')
@@ -37,7 +43,7 @@ def predict():
 	return str(predictions)
 
 
-@app.route('/crop')
+@app.route('/mobile')
 def crop():
 	# return render_template('crop.html')
 	return render_template('testcrop.html')   ##credit to Pen by Moncho Varela

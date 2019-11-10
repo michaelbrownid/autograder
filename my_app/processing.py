@@ -39,17 +39,20 @@ def count_seg(filename):
 def label_segments(filename,savename='',photo=False,marker=False):
     alpha=1.1
     beta=0
-    image = cv2.imread(filename,cv2.IMREAD_GRAYSCALE)
-    image = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    try:
+        image = cv2.imread(filename,cv2.IMREAD_GRAYSCALE)
+    except:
+        image = plt.imread(filename)
     if marker==False:
         try:
             image = cv2.blur(image, (8, 8))
         except:
             pass
-    # fig,axes = plt.subplots(1,figsize=(20,10))
-    # axes.imshow(image,cmap='gray')
-    # axes.set_title('Raw Image')         
+    fig,axes = plt.subplots(1,figsize=(20,10))
+    axes.imshow(image,cmap='gray')
+    axes.set_title('Raw Image')         
     if photo:
+        image = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
         arrraaayyy = np.array(image)
         gray_image = color.rgb2gray(arrraaayyy)
         meaaannn = np.mean(gray_image)
@@ -66,6 +69,7 @@ def label_segments(filename,savename='',photo=False,marker=False):
         fig,axes = plt.subplots(1,figsize=(20,10))
         axes.imshow(huh)
         axes.set_title('Postprocessed Image')
+        fig.savefig(savename+'_postprocessed.jpg')
         return huh,np.array(label_arr),segments,image #label_segments(temp,savename,photo=False)
     else:
         gray_image = color.rgb2gray(image)
@@ -78,7 +82,7 @@ def label_segments(filename,savename='',photo=False,marker=False):
     label_arr, num_seg = ndi.label(np.invert(binary))
     
     segments = np.arange(1,num_seg+1)
-    print(segments)
+    #print(segments)
     return binary*1,np.array(label_arr),segments,image
 
 def plot_image(label_arr):

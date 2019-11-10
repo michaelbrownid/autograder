@@ -2,8 +2,6 @@
 .page {
 	margin: 1em auto;
 	max-width: 768px;
-	display: flex;
-	align-items: flex-start;
 	flex-wrap: wrap;
 	height: 100%;
 }
