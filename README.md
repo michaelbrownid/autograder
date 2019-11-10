@@ -4,16 +4,16 @@ Autograder for handwritten free-response answers using ML.
 
 
 ### Motivation
-<p>
+
 Hand-grading free-response questions is a daunting task for many teachers. Current technology allows for autograding of multiple-choice questions (e.g., Illuminate has built-in scoring and gradebook update capabilities). However, OCR-based handwriting recognition is not yet readily available to the public. This tool aims to alleviate the grading burden for teachers.\
-<!-- <img src="images/Nina_AutoGrader-1.png"
-     style="float: left; margin-right: 10px; width: 50px;" />
+<img src="images/Nina_AutoGrader-1.png"
+     style="float: left; margin-right: 10px; width: 500px;" />
 <img src="images/Nina_AutoGrader-2.png"
-     style="float: left; margin-right: 10px; width: 50px;" /> -->
+     style="float: left; margin-right: 10px; width: 500px;" />
 
-![](images/Nina_AutoGrader-1.png "project design") ![](images/Nina_AutoGrader-2.png "project design")
+<!-- ![design](images/Nina_AutoGrader-1.png "general project design" ) ![design|20%](images/Nina_AutoGrader-2.png "detailed project design") -->
 
-</p>
+
 
 ### Inspiration
 
