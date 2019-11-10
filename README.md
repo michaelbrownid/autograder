@@ -4,6 +4,8 @@
 ### Motivation
 Hand-grading free-response questions is a daunting task for many teachers. Current technology allows for autograding of multiple-choice questions (e.g., Illuminate has built-in scoring and gradebook update capabilities). However, OCR-based handwriting recognition is not yet readily available to the public. This tool aims to alleviate the grading burden for teachers.
 
+
+
 # Overview
 
 
@@ -11,26 +13,23 @@ Hand-grading free-response questions is a daunting task for many teachers. Curre
 
 Current technology is proprietary. I aim to create a lighter-weight, opensource tool with similar functionality. 
 
-1. Illuminate Education software integrates OCR autograding and gradebook updating for multiple choice tests. As a former teacher, this tool was invaluable. It is the primary inspiration for my project.
-![illuminate](images/Illuminate.png "Illuminate" ) 
-2. Microsoft has powerful on-the-fly penstroke capturing software, Windows Ink, which parses handwritten digits and symbols into mathematical expressions.  
+1. Illuminate Education software integrates OCR autograding and gradebook updating for multiple choice tests. As a former teacher, this tool was invaluable. It is the primary inspiration for my project.<br>
+![illuminate](images/Illuminate.png "Illuminate" ) <br>
+2. Microsoft has powerful on-the-fly penstroke capturing software, Windows Ink, which parses handwritten digits and symbols into mathematical expressions.  <br>
 ![microsoft](images/MicrosoftInk.png "Windows Ink" ) 
 
+## Table of contents
 
-## Table of content
-
-
+- [Inspiration](#inspiration)
 - [Product Design](#product-design)
 - [Data Sources](#data-sources)
 - [Obtaining Data](#obtaining-data)
     - [MNIST](#MNIST)
     - [HASYv2](#HASYv2)
-    - [Import the uploaded page tree file](#import-the-uploaded-page-tree-file)
 - [Preprocessing](#image-processing)
-    - [TER](#typo3-extension-repository)
-    - [Composer](#composer)
-- [License](#license)
-- [Links](#links)
+- [Build/Run App](#running-the-app)
+
+
 
 # Product Design
 
