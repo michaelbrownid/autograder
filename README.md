@@ -39,12 +39,12 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 
 # Data Sources
-#### Detailed instructions for obtaining data is provided below. Use link under "Name" column.<br>
+#### Detailed instructions for obtaining data is [provided here](#obtaining-data).<br>
 | Name | Description | Link | Usage | 
 | --- | --- | --- | --- |
 | [MNIST](#MNIST) | Well-known repository for handwritten digits | http://yann.lecun.com/exdb/mnist/ | Training |
 | [HASYv2](#HASYv2) | Over 150,000 handwritten characters (including LaTeX mathematical symbols) | https://zenodo.org/record/259444 | Training |
-| Kenasata | Over 16,000 labeled handwritten digits (includes gender, country, age) | https://github.com/kensanata/numbers | Testing |
+| [Kensanata](#Kensanata) | Over 16,000 labeled handwritten digits (includes gender, country, age) | https://github.com/kensanata/numbers | Testing |
 | CROHME | Competition on Recognition of Online Handwritten Mathematical Expressions (InkML format) |https://www.isical.ac.in/~crohme/CROHME_data.html | Future Directions |
 
 
@@ -84,6 +84,40 @@ X = digits.data
 y = digits.target
 ```
 
+#### HASYv2
+HASYv2 is an extensive dataset, primarily consisting of LaTeX images. The following code limits the dataset to digits (line 34).
+
+##### HASYv2 digit dataset
+- 1,020 total images
+- image size: 32 x 32 pixels
+
+Running this code will return reshaped 28x28 image arrays 
+```
+from newDatasets import load_HASY
+X,y = load_HASY() 
+```
+
+#### Kensanata
+Kensanata dataset includes interesting demographic data. There are ~17K digit images in the set. The [original file structure](https://github.com/kensanata/numbers) makes direct processing somewhat cumbersome. I have compiled the images into [a single directory](https://github.com/aprettyloner/autograder/tree/master/Kensanata). The naming schema has been retained to describe demographic information.
+- country: (ISO 3166 Alpha-2 codes) or XX if unknown (e.g. Switzerland is CH)
+- age: rounded to the nearest decade (e.g. 35 to 44 years is 4) or X if unknown
+- sex: (M for man, F for woman, X for unknown, O for other)
+
+##### Kensanata digit dataset
+- 16,994 total images
+- image size: varies
+
+Running this code will return reshaped 28x28 image arrays 
+```
+from newDatasets import load_Kensanata
+X,y = load_Kensanata() 
+```
+
+Running this code will return a dataframe with all information, including 28x28 image arrays  
+```
+from newDatasets import load_Kensanata
+df = load_Kensanata(dataframe = True)
+```
 
 # Running the app
 Clone repo via SSH or HTTPS
