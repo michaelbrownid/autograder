@@ -1,0 +1,8 @@
+my_app/rootCA.key
+my_app/rootCA.pem
+my_app/rootCA.srl
+my_app/server.crt
+my_app/server.csr
+my_app/server.csr.cnf
+my_app/server.key
+
