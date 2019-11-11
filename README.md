@@ -12,11 +12,11 @@ Hand-grading free-response questions is a daunting task for many teachers. Curre
 - [Data Sources](#data-sources)
 - [Preprocessing](#image-processing)
 - [Model & Evaluation](#model-and-evaluation)
-- [Baseline Models](#baseline-models)
-    - [Decision Tree](#decision-tree-classifier)
-    - [SVM](#SVM-classifier)
-- [Model Improvement](#CNN-classifier)
-    - [CNN](#SVM-classifier)
+    - [Baseline Models](#baseline-models)
+        - [Decision Tree](#decision-tree-classifier)
+        - [SVM](#SVM-classifier)
+    - [Model Improvement](#CNN-classifier)
+        - [CNN](#SVM-classifier)
 - [Obtaining Data](#obtaining-data)
     - [MNIST](#MNIST)
     - [HASYv2](#HASYv2)
@@ -41,7 +41,7 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 # Product Design
 
-## This details the backend product design. View the current [web app prototype](#app-prototype).
+#### This details the backend product design. View the current [web app prototype](#app-prototype).
 
 | General | Detailed |
 | --- | --- |
