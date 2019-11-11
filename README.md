@@ -80,7 +80,7 @@ Accuracy is summarized for each of the models. F1 scores is also used for model 
 | --- | --- | --- |
 | Decision Tree |  0.8759 | 0.3353 |
 | SVM |  0.9375 | 0.3033 |
-| CNN #1 | 0.9836 | tbd |
+| CNN #1 | 0.9836 | 0.8040 |
 
 
 
@@ -108,11 +108,12 @@ Standard Scaler is used for SVM classsification. Although SVM works well with MN
 # Model Improvement
 
 ### CNN Classifier
+Improved on Kenasata dataset. Note: These images are processed raw, so that comparisons with MNIST is fair. In the app implementation, this same model is used, however after preprocessing of images. This results in much higher performance.
 
 | MNIST Test Set | Kensanata Test Set |
 | --- | --- |
-| ![CNN-1](images/BarGraph_CNN#1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN-1](images/BarGraph_CNN#1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
-| ![CNN-1](images/ConfusionMatrix_CNN#1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN-1](images/ConfusionMatrix_CNN#1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
+| ![CNN](images/BarGraph_CNN1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN](images/BarGraph_CNN1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
+| ![CNN](images/ConfusionMatrix_CNN1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN](images/ConfusionMatrix_CNN1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
 
 
 
