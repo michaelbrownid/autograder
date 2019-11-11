@@ -5,6 +5,22 @@
 Hand-grading free-response questions is a daunting task for many teachers. Current technology allows for autograding of multiple-choice questions (e.g., Illuminate has built-in scoring and gradebook update capabilities). However, OCR-based handwriting recognition is not yet readily available to the public. This tool aims to alleviate the grading burden for teachers.
 
 
+## Table of contents
+
+- [Overview](#overview)
+- [Product Design](#product-design)
+- [Data Sources](#data-sources)
+- [Obtaining Data](#obtaining-data)
+    - [MNIST](#MNIST)
+    - [HASYv2](#HASYv2)
+    - [Kensanata](#Kensanata)
+- [Preprocessing](#image-processing)
+- [Model & Evaluation](#model-and-evaluation)
+    - [Decision Tree](#decision-tree-classifier)
+    - [SVM](#SVM-classifier)
+- [Build/Run App](#running-the-app)
+
+
 
 # Overview
 
@@ -17,19 +33,6 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 ![illuminate](images/Illuminate.png "Illuminate" ) <br>
 2. Microsoft has powerful on-the-fly penstroke capturing software, Windows Ink, which parses handwritten digits and symbols into mathematical expressions.  <br>
 ![microsoft](images/MicrosoftInk.png "Windows Ink" ) 
-
-## Table of contents
-
-- [Product Design](#product-design)
-- [Data Sources](#data-sources)
-- [Obtaining Data](#obtaining-data)
-    - [MNIST](#MNIST)
-    - [HASYv2](#HASYv2)
-    - [Kensanata](#Kensanata)
-- [Preprocessing](#image-processing)
-- [Model & Evaluation](#model-and-evaluation)
-- [Build/Run App](#running-the-app)
-
 
 
 # Product Design
@@ -63,13 +66,28 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 # Model and Evaluation
 
-### Baseline: Decision Tree Classifier
+## Baseline Models
+Decision Tree and SVM classifiers were used as baseline models. Model evaluation for all classifiers involves both MNIST test data (10K images) and a Kensanata subset (1500 images). The Kensanata dataset is important to classify, as it most closely resembles the data in my product usage. Unlike the uniformly sized and pre-cleaned images in the MNIST set, the Kensanata images require a great deal preprocessing. 
+
+### Decision Tree Classifier
 
 
 | MNIST Test Set | Kensanata Test Set |
 | --- | --- |
-| ![Decision Tree](images/ConfusionMatrix_DecisionTree(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/ConfusionMatrix_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
 | ![Decision Tree](images/BarGraph_DecisionTreeClassifier(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/BarGraph_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
+| ![Decision Tree](images/ConfusionMatrix_DecisionTree(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/ConfusionMatrix_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
+
+
+
+### SVM Classifier
+
+
+| MNIST Test Set | Kensanata Test Set |
+| --- | --- |
+| ![SVM](images/BarGraph_SVMCLassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMCLassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
+| ![SVM](images/ConfusionMatrix_SVMCLassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMCLassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
+
+
 
 # Obtaining Data
 ## MNIST
