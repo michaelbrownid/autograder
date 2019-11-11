@@ -82,7 +82,15 @@ Accuracy is summarized for each of the models. F1 scores is also used for model 
 | SVM |  0.9375 | 0.3033 |
 | CNN #1 | 0.9836 | 0.8040 |
 
+The following F1 scores (and classification reports) are based on Kensanata data only.
 
+| Model | F1 Score by Digit| 
+| --- | --- | 
+| Decision Tree | ![DT](images/F1Score_DecisionTreeClassifier(Kensanata).png)  |
+| SVM |  ![SVM](images/F1Score_SVMClassifier(Kensanata).png) | 
+| CNN #1 | ![CNN](images/F1Score_CNN1Classifier(Kensanata).png) |
+
+![Model Improved](images/model_improvement.png "Model Improvement" )
 
 # Baseline Models
 Decision Tree and SVM classifiers were used as baseline models. 
@@ -108,7 +116,7 @@ Standard Scaler is used for SVM classsification. Although SVM works well with MN
 # Model Improvement
 
 ### CNN Classifier
-Improved on Kenasata dataset. Note: These images are processed raw, so that comparisons with MNIST is fair. In the app implementation, this same model is used, however after preprocessing of images. This results in much higher performance.
+Improved on Kenasata dataset. Note: These images are processed raw, so that comparisons with MNIST is fair. This same model is used in the app, however after preprocessing of images. This results in even higher performance.
 
 | MNIST Test Set | Kensanata Test Set |
 | --- | --- |
@@ -117,10 +125,6 @@ Improved on Kenasata dataset. Note: These images are processed raw, so that comp
 
 
 
-<!-- | MNIST Test Set | Kensanata Test Set |
-| --- | --- |
-| ![SVM](images/BarGraph_SVMCLassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMCLassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
-| ![SVM](images/ConfusionMatrix_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) | -->
 
 
 # Obtaining Data
