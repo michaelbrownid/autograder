@@ -10,14 +10,17 @@ Hand-grading free-response questions is a daunting task for many teachers. Curre
 - [Overview](#overview)
 - [Product Design](#product-design)
 - [Data Sources](#data-sources)
+- [Preprocessing](#image-processing)
+- [Model & Evaluation](#model-and-evaluation)
+- [Baseline Models](#baseline-models)
+    - [Decision Tree](#decision-tree-classifier)
+    - [SVM](#SVM-classifier)
+- [Model Improvement](#CNN-classifier)
+    - [CNN](#SVM-classifier)
 - [Obtaining Data](#obtaining-data)
     - [MNIST](#MNIST)
     - [HASYv2](#HASYv2)
-    - [Kensanata](#Kensanata)
-- [Preprocessing](#image-processing)
-- [Model & Evaluation](#model-and-evaluation)
-    - [Decision Tree](#decision-tree-classifier)
-    - [SVM](#SVM-classifier)
+    - [Kensanata](#Kensanata)    
 - [Build/Run App](#running-the-app)
 - [App Prototype](#app-prototype)
 
@@ -38,7 +41,7 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 # Product Design
 
-This details the backend product design. View the current [web app prototype](#app-prototype).
+## This details the backend product design. View the current [web app prototype](#app-prototype).
 
 | General | Detailed |
 | --- | --- |
@@ -81,8 +84,9 @@ Accuracy is summarized for each of the models. F1 scores is also used for model 
 
 
 
-## Baseline Model
+# Baseline Models
 Decision Tree and SVM classifiers were used as baseline models. 
+
 ### Decision Tree Classifier
 
 
@@ -94,18 +98,20 @@ Decision Tree and SVM classifiers were used as baseline models.
 
 
 ### SVM Classifier
-
+Standard Scaler is used for SVM classsification. Although SVM works well with MNIST data, it does not perform well with Kenasata.
 
 | MNIST Test Set | Kensanata Test Set |
 | --- | --- |
 | ![SVM](images/BarGraph_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
 | ![SVM](images/ConfusionMatrix_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
 
-### CNN Classifier #1
+# Model Improvement
+
+### CNN Classifier
 
 | MNIST Test Set | Kensanata Test Set |
 | --- | --- |
-| ![CNN-1](images/BarGraph_CNN#1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN-1](images/BarGraph_CNN#1CLassifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
+| ![CNN-1](images/BarGraph_CNN#1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN-1](images/BarGraph_CNN#1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
 | ![CNN-1](images/ConfusionMatrix_CNN#1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN-1](images/ConfusionMatrix_CNN#1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
 
 
