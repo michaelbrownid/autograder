@@ -8,7 +8,9 @@ cropped = document.querySelector('.cropped'),
 dwn = document.querySelector('.download'),
 upload = document.querySelector('#file-input'),
 cropper = '';
+ans = document.querySelector('.answer'),
 process = document.querySelector('.process');
+
 
 // Set constraints for the video stream
 var constraints = { video: { facingMode: "user" }, audio: false };// Define constants
@@ -61,6 +63,7 @@ save.addEventListener('click', e => {
   // show image cropped
   cropped.src = imgSrc;
   dwn.classList.remove('hide');
+  ans.classList.remove('hide');
   dwn.download = 'imagename.png';
   dwn.setAttribute('href', imgSrc);
 });
@@ -72,6 +75,6 @@ dwn.addEventListener('click', e => {
   // window.alert(String(url))
   console.log('landingpage?imgurl='+url);
   yobro = encodeURIComponent(url)
-  window.location.href='landingpage?imgurl='+yobro;
-
+  // window.location.href='landingpage?imgurl='+yobro;
+  window.location.href='landingpage?imgurl='+yobro+'&answer='+ans.value;
 });

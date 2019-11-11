@@ -99,20 +99,24 @@ img {
 	<div class="box-2 img-result hide">
 		<!-- result of crop -->
 		<img class="cropped" src="" alt="">
-	</div>
-	<!-- input file -->
+  </div>
+  <div><a href='/'><h4>Use webcam instead.</h4></a></div>
+  <!-- input file -->
 	<div class="box">
 		<div class="options hide">
-			<label> Width</label>
+			<label> Enter Answer</label>
 			<input type="number" class="img-w" value="1080" min="100" max="1200" />
-		</div>
-		<!-- save btn -->
+    </div>
+  
+
+    <!-- save btn -->
 		<button class="btn save hide">Crop Image</button>
-		<!-- download btn -->
+    <!-- download btn -->
+    <input type="text" class="answer hide"  onfocus="if(this.value=='Enter Answer')this.value=''" onblur="if(this.value=='')this.value='Enter Answer'" />
     <a href="" class="btn download hide">PROCESS</a>
-		<!-- process btn -->
-    <a href="" class="btn process hide">PROCESS IMAGE!</a>
-	</div>
+
+  </div>
+
 </main>
 
     <script src="https://static.codepen.io/assets/common/stopExecutionOnTimeout-de7e2ef6bfefd24b79a3f68b414b87b8db5b08439cac3f1012092b2290c719cd.js"></script>
@@ -128,6 +132,7 @@ options = document.querySelector('.options'),
 save = document.querySelector('.save'),
 cropped = document.querySelector('.cropped'),
 dwn = document.querySelector('.download'),
+ans = document.querySelector('.answer'),
 upload = document.querySelector('#file-input'),
 cropper = '';
 process = document.querySelector('.process'),
@@ -149,7 +154,8 @@ upload.addEventListener('change', e => {
         result.appendChild(img);
         // show save btn and options
         save.classList.remove('hide');
-        options.classList.remove('hide');
+       
+        //options.classList.remove('hide');
         // init cropper
         cropper = new Cropper(img);
       }
@@ -171,6 +177,7 @@ save.addEventListener('click', e => {
   // show image cropped
   cropped.src = imgSrc;
   dwn.classList.remove('hide');
+  ans.classList.remove('hide');
   dwn.download = 'imagename.png';
   dwn.setAttribute('href', imgSrc);
 });
@@ -179,10 +186,11 @@ dwn.addEventListener('click', e => {
   e.preventDefault();
   // process.classList.remove('hide');
   url = dwn.getAttribute('href');
-  // window.alert(String(url))
+  // answer = ans.value;
   console.log('landingpage?imgurl='+url);
   yobro = encodeURIComponent(url)
-  window.location.href='landingpage?imgurl='+yobro;
+  //window.location.href='landingpage?imgurl='+yobro;
+  window.location.href='landingpage?imgurl='+yobro+'&answer='+ans.value;
 
 });
 

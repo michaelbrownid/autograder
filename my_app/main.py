@@ -4,7 +4,7 @@ import urllib.request
 from app import app
 from flask import Flask, flash, request, redirect, render_template
 
-
+from tensorflow.keras import models
 from predict import predict_tf
 from predict import *
 
@@ -17,8 +17,8 @@ import boto3
 s3 = boto3.resource('s3')
 
 #tf_model = keras.models.load_model('static/mnist_hasyv2_master_20epochs_batch64_201911081573209782.h5')  #tf_model.h5
-tf_model = keras.models.load_model('static/tf_model.h5')
-#tf_model = models.load_model('static/mnist_hasyv2_master_20epochs_batch64__ALLDATA_201911081573211546.h5')
+#tf_model = models.load_model('static/tf_model.h5')
+tf_model = models.load_model('static/mnist_hasyv2_master_20epochs_batch64__ALLDATA_201911081573211546.h5')
 
 
 def allowed_file(filename):
@@ -53,14 +53,20 @@ def crop():
 @app.route('/landingpage',methods=['GET', 'POST', 'PUT'])
 def landingpage():
 	url=request.args['imgurl']
+	ans=request.args['answer']
 	imgfile,typee  = urllib.request.urlretrieve(str(url) )
 	arr=cv2.imread(imgfile) 
 	im = Image.fromarray(arr)
 	tempfile = 'cropped_image.jpg'
 	im.save(tempfile)
 	predictions = predict_tf(tf_model,tempfile)
-	#return str(predictions)	
-	return '<img src=\"'+url+'\"><br><h1>'+str(predictions)	+'</h1>'
+	s = [str(i) for i in predictions] 
+	response = ''.join(s)
+	outcome = 'Incorrect'
+	if response == ans:
+		outcome = 'Correct!'
+	returnstring = "<h4>Answer Key: \t"+ans+'<br>Student Response: \t'+response+"<br><br><a href='/mobile'><img src='https://image.flaticon.com/icons/svg/13/13964.svg' alt='Go Back' width=50px/></h4></a>"
+	return '<img src=\"'+url+'\"><br><h1>'+outcome+'</h1>' +returnstring
 
 @app.route('/', methods=['POST'])
 def upload_file():

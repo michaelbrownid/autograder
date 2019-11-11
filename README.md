@@ -40,12 +40,12 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 # Data Sources
 #### Detailed instructions for obtaining data is [provided here](#obtaining-data).<br>
-| Name | Description | Link | Usage | 
+| Name | Description | Usage | Resource | 
 | --- | --- | --- | --- |
-| [MNIST](#MNIST) | Well-known repository for handwritten digits | http://yann.lecun.com/exdb/mnist/ | Training |
-| [HASYv2](#HASYv2) | Over 150,000 handwritten characters (including LaTeX mathematical symbols) | https://zenodo.org/record/259444 | Training |
-| [Kensanata](#Kensanata) | Over 16,000 labeled handwritten digits (includes gender, country, age) | https://github.com/kensanata/numbers | Testing |
-| CROHME | Competition on Recognition of Online Handwritten Mathematical Expressions (InkML format) |https://www.isical.ac.in/~crohme/CROHME_data.html | Future Directions |
+| [MNIST](#MNIST) | Well-known repository for handwritten digits | Training  | http://yann.lecun.com/exdb/mnist/ |
+| [HASYv2](#HASYv2) | Over 150,000 handwritten characters (including LaTeX mathematical symbols) | Training | https://zenodo.org/record/259444 |
+| [Kensanata](#Kensanata) | Over 16,000 labeled handwritten digits (includes gender, country, age) |  Testing | https://github.com/kensanata/numbers |
+| CROHME | Competition on Recognition of Online Handwritten Mathematical Expressions (InkML format) | Future Directions | https://www.isical.ac.in/~crohme/CROHME_data.html | 
 
 
 
@@ -140,5 +140,6 @@ pip install -r requirements.txt
 cd autograder/my_app/
 export FLASK_APP=main.py
 export FLASK_DEBUG=1
-run flask
+flask run
 ```
+
