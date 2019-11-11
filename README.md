@@ -10,6 +10,10 @@ Hand-grading free-response questions is a daunting task for many teachers. Curre
 - [Overview](#overview)
 - [Product Design](#product-design)
 - [Data Sources](#data-sources)
+- [Obtaining Data](#obtaining-data)
+    - [MNIST](#MNIST)
+    - [HASYv2](#HASYv2)
+    - [Kensanata](#Kensanata)  
 - [Preprocessing](#image-processing)
 - [Model & Evaluation](#model-and-evaluation)
     - [Baseline Models](#baseline-models)
@@ -17,10 +21,7 @@ Hand-grading free-response questions is a daunting task for many teachers. Curre
         - [SVM](#SVM-classifier)
     - [Model Improvement](#CNN-classifier)
         - [CNN](#SVM-classifier)
-- [Obtaining Data](#obtaining-data)
-    - [MNIST](#MNIST)
-    - [HASYv2](#HASYv2)
-    - [Kensanata](#Kensanata)    
+    - [Model Summary](#model-summary)
 - [Build/Run App](#running-the-app)
 - [App Prototype](#app-prototype)
 
@@ -56,75 +57,6 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 | [HASYv2](#HASYv2) | Over 150,000 handwritten characters (including LaTeX mathematical symbols) | Training | https://zenodo.org/record/259444 |
 | [Kensanata](#Kensanata) | Over 16,000 labeled handwritten digits (includes gender, country, age) |  Testing | https://github.com/kensanata/numbers |
 | CROHME | Competition on Recognition of Online Handwritten Mathematical Expressions (InkML format) | Future Directions | https://www.isical.ac.in/~crohme/CROHME_data.html | 
-
-
-
-# Image Processing
-
-
-| Stage | Image | Issues |
-| --- | --- | --- | 
-| Raw Image | ![raw-image](images/0734.jpg "Raw Image" ) | From the human eye, 4 distinct segments are readily apparent. However, shadows and other subtle artifacts are detected by the computer as objects.  | 
-| Preprocessed Binary | ![binary-image](images/0734_original.jpg "Binary Image" ) | Results in 4000+ segments (expected 4) due to noisy, non-white background. Dots are each considered separate segments. Requires processing. | 
-| Postprocessed Binary | ![processed-image](images/postprocessed_binary.jpg "Processed Image" ) | Adjusting alpha levels and gaussian blurring reduces noise from raw image. Segmentation ready.  | 
-| Segmented Image | ![segmented-image](images/0734_segmented.png "Segmented Image" ) | Proper segmentation detects 4 objects.  | 
-
-
-# Model and Evaluation
-Model evaluation for all classifiers involves both MNIST test data (10K images) and a Kensanata subset (1500 images). The Kensanata dataset is important to classify, as it most closely resembles the data in my product usage. Unlike the uniformly sized and pre-cleaned images in the MNIST set, the Kensanata images are noisy and require a great deal preprocessing. This mimics the real-life conditions of images processed in the autograder app.
-
-## Model Summary
-Accuracy is summarized for each of the models. F1 scores is also used for model evaluation, as it combines recall and precision into one performance metric.
-
-| Model | MNIST Test Set | Kensanata Test Set |
-| --- | --- | --- |
-| Decision Tree |  0.8759 | 0.3353 |
-| SVM |  0.9375 | 0.3033 |
-| CNN #1 | 0.9836 | 0.8040 |
-
-The following F1 scores (and classification reports) are based on Kensanata data only.
-
-| Model | F1 Score (Macro) | F1 Score by Digit| 
-| --- | --- | --- | 
-| Decision Tree | 0.33 | ![DT](images/F1Score_DecisionTreeClassifier(Kensanata).png)  |
-| SVM | 0.27 |  ![SVM](images/F1Score_SVMClassifier(Kensanata).png) | 
-| CNN #1 | 0.80 | ![CNN](images/F1Score_CNN1Classifier(Kensanata).png) |
-
-![Model Improved](images/model_improvement.png "Model Improvement" )
-
-# Baseline Models
-Decision Tree and SVM classifiers were used as baseline models. 
-
-### Decision Tree Classifier
-
-
-| MNIST Test Set | Kensanata Test Set |
-| --- | --- |
-| ![Decision Tree](images/BarGraph_DecisionTreeClassifier(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/BarGraph_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
-| ![Decision Tree](images/ConfusionMatrix_DecisionTree(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/ConfusionMatrix_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
-
-
-
-### SVM Classifier
-Standard Scaler is used for SVM classsification. Although SVM works well with MNIST data, it does not perform well with Kenasata.
-
-| MNIST Test Set | Kensanata Test Set |
-| --- | --- |
-| ![SVM](images/BarGraph_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
-| ![SVM](images/ConfusionMatrix_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
-
-# Model Improvement
-
-### CNN Classifier
-Improved on Kenasata dataset. Note: These images are processed raw, so that comparisons with MNIST is fair. This same model is used in the app, however after preprocessing of images. This results in even higher performance.
-
-| MNIST Test Set | Kensanata Test Set |
-| --- | --- |
-| ![CNN](images/BarGraph_CNN1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN](images/BarGraph_CNN1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
-| ![CNN](images/ConfusionMatrix_CNN1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN](images/ConfusionMatrix_CNN1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
-
-
-
 
 
 # Obtaining Data
@@ -185,6 +117,76 @@ Running this code will return a dataframe with all information, including 28x28 
 from newDatasets import load_Kensanata
 df = load_Kensanata(dataframe = True)
 ```
+
+
+# Image Processing
+
+
+| Stage | Image | Issues |
+| --- | --- | --- | 
+| Raw Image | ![raw-image](images/0734.jpg "Raw Image" ) | From the human eye, 4 distinct segments are readily apparent. However, shadows and other subtle artifacts are detected by the computer as objects.  | 
+| Preprocessed Binary | ![binary-image](images/0734_original.jpg "Binary Image" ) | Results in 4000+ segments (expected 4) due to noisy, non-white background. Dots are each considered separate segments. Requires processing. | 
+| Postprocessed Binary | ![processed-image](images/postprocessed_binary.jpg "Processed Image" ) | Adjusting alpha levels and gaussian blurring reduces noise from raw image. Segmentation ready.  | 
+| Segmented Image | ![segmented-image](images/0734_segmented.png "Segmented Image" ) | Proper segmentation detects 4 objects.  | 
+
+
+# Model and Evaluation
+Model evaluation for all classifiers involves both MNIST test data (10K images) and a Kensanata subset (1500 images). The Kensanata dataset is important to classify, as it most closely resembles the data in my product usage. Unlike the uniformly sized and pre-cleaned images in the MNIST set, the Kensanata images are noisy and require a great deal preprocessing. This mimics the real-life conditions of images processed in the autograder app.
+
+# Baseline Models
+Decision Tree and SVM classifiers were used as baseline models. 
+
+### Decision Tree Classifier
+
+
+| MNIST Test Set | Kensanata Test Set |
+| --- | --- |
+| ![Decision Tree](images/BarGraph_DecisionTreeClassifier(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/BarGraph_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
+| ![Decision Tree](images/ConfusionMatrix_DecisionTree(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/ConfusionMatrix_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
+
+
+
+### SVM Classifier
+Standard Scaler is used for SVM classsification. Although SVM works well with MNIST data, it does not perform well with Kenasata.
+
+| MNIST Test Set | Kensanata Test Set |
+| --- | --- |
+| ![SVM](images/BarGraph_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
+| ![SVM](images/ConfusionMatrix_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
+
+# Model Improvement
+
+### CNN Classifier
+Improved on Kenasata dataset. Note: These images are processed raw, so that comparisons with MNIST is fair. This same model is used in the app, however after preprocessing of images. This results in even higher performance.
+
+| MNIST Test Set | Kensanata Test Set |
+| --- | --- |
+| ![CNN](images/BarGraph_CNN1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN](images/BarGraph_CNN1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
+| ![CNN](images/ConfusionMatrix_CNN1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN](images/ConfusionMatrix_CNN1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
+
+
+
+
+## Model Summary
+Accuracy is summarized for each of the models. F1 scores is also used for model evaluation, as it combines recall and precision into one performance metric.
+
+| Model | MNIST Test Set | Kensanata Test Set |
+| --- | --- | --- |
+| Decision Tree |  0.8759 | 0.3353 |
+| SVM |  0.9375 | 0.3033 |
+| CNN #1 | 0.9836 | 0.8040 |
+
+The following F1 scores (and classification reports) are based on Kensanata data only.
+
+| Model | F1 Score (Macro) | F1 Score by Digit| 
+| --- | --- | --- | 
+| Decision Tree | 0.33 | ![DT](images/F1Score_DecisionTreeClassifier(Kensanata).png)  |
+| SVM | 0.27 |  ![SVM](images/F1Score_SVMClassifier(Kensanata).png) | 
+| CNN | 0.80 | ![CNN](images/F1Score_CNN1Classifier(Kensanata).png) |
+
+![Model Improved](images/model_improvement.png "Model Improvement" )
+
+
 
 # Running the app
 Clone repo via SSH or HTTPS
