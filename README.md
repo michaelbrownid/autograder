@@ -84,11 +84,11 @@ Accuracy is summarized for each of the models. F1 scores is also used for model 
 
 The following F1 scores (and classification reports) are based on Kensanata data only.
 
-| Model | F1 Score by Digit| 
-| --- | --- | 
-| Decision Tree | ![DT](images/F1Score_DecisionTreeClassifier(Kensanata).png)  |
-| SVM |  ![SVM](images/F1Score_SVMClassifier(Kensanata).png) | 
-| CNN #1 | ![CNN](images/F1Score_CNN1Classifier(Kensanata).png) |
+| Model | F1 Score (Macro) | F1 Score by Digit| 
+| --- | --- | --- | 
+| Decision Tree | 0.33 | ![DT](images/F1Score_DecisionTreeClassifier(Kensanata).png)  |
+| SVM | 0.27 |  ![SVM](images/F1Score_SVMClassifier(Kensanata).png) | 
+| CNN #1 | 0.80 | ![CNN](images/F1Score_CNN1Classifier(Kensanata).png) |
 
 ![Model Improved](images/model_improvement.png "Model Improvement" )
 
