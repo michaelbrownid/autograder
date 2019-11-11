@@ -27,6 +27,7 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
     - [HASYv2](#HASYv2)
     - [Kensanata](#Kensanata)
 - [Preprocessing](#image-processing)
+- [Model & Evaluation](#model-and-evaluation)
 - [Build/Run App](#running-the-app)
 
 
@@ -59,6 +60,16 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 | Postprocessed Binary | ![processed-image](images/postprocessed_binary.jpg "Processed Image" ) | Adjusting alpha levels and gaussian blurring reduces noise from raw image. Segmentation ready.  | 
 | Segmented Image | ![segmented-image](images/0734_segmented.png "Segmented Image" ) | Proper segmentation detects 4 objects.  | 
 
+
+# Model and Evaluation
+
+### Baseline: Decision Tree Classifier
+
+
+| MNIST Test Set | Kensanata Test Set |
+| --- | --- |
+| ![Decision Tree](images/ConfusionMatrix_DecisionTree(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/ConfusionMatrix_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
+| ![Decision Tree](images/BarGraph_DecisionTreeClassifier(MNISTTestSet).png "Decision Tree Classifier - MNIST" )  | ![Decision Tree](images/BarGraph_DecisionTreeClassifier(Kensanata).png "Decision Tree Classifier - Kensanata" ) |
 
 # Obtaining Data
 ## MNIST
@@ -98,7 +109,7 @@ X,y = load_HASY()
 ```
 
 ## Kensanata
-Kensanata dataset includes interesting demographic data. There are ~17K digit images in the set. The [original file structure](https://github.com/kensanata/numbers) makes direct processing somewhat cumbersome. I have compiled the images into [a single directory](https://github.com/aprettyloner/autograder/tree/master/Kensanata). The naming schema has been retained to describe demographic information.
+Kensanata dataset includes interesting demographic data. There are ~17K digit images in the set. The [original file structure](https://github.com/kensanata/numbers?files=1) makes direct processing somewhat cumbersome. I have compiled the images into [a single directory](https://github.com/aprettyloner/autograder/tree/master/Kensanata). The naming schema has been retained to describe demographic information.
 - country: (ISO 3166 Alpha-2 codes) or XX if unknown (e.g. Switzerland is CH)
 - age: rounded to the nearest decade (e.g. 35 to 44 years is 4) or X if unknown
 - sex: (M for man, F for woman, X for unknown, O for other)
