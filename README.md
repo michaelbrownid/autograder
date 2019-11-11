@@ -19,6 +19,7 @@ Hand-grading free-response questions is a daunting task for many teachers. Curre
     - [Decision Tree](#decision-tree-classifier)
     - [SVM](#SVM-classifier)
 - [Build/Run App](#running-the-app)
+- [App Prototype](#app-prototype)
 
 
 
@@ -36,6 +37,8 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 
 # Product Design
+
+This details the backend product design. View the current [web app prototype](#app-prototype).
 
 | General | Detailed |
 | --- | --- |
@@ -65,10 +68,21 @@ Current technology is proprietary. I aim to create a lighter-weight, opensource 
 
 
 # Model and Evaluation
+Model evaluation for all classifiers involves both MNIST test data (10K images) and a Kensanata subset (1500 images). The Kensanata dataset is important to classify, as it most closely resembles the data in my product usage. Unlike the uniformly sized and pre-cleaned images in the MNIST set, the Kensanata images are noisy and require a great deal preprocessing. This mimics the real-life conditions of images processed in the autograder app.
 
-## Baseline Models
-Decision Tree and SVM classifiers were used as baseline models. Model evaluation for all classifiers involves both MNIST test data (10K images) and a Kensanata subset (1500 images). The Kensanata dataset is important to classify, as it most closely resembles the data in my product usage. Unlike the uniformly sized and pre-cleaned images in the MNIST set, the Kensanata images require a great deal preprocessing. 
+## Model Summary
+Accuracy is summarized for each of the models. F1 scores is also used for model evaluation, as it combines recall and precision into one performance metric.
 
+| Model | MNIST Test Set | Kensanata Test Set |
+| --- | --- | --- |
+| Decision Tree |  0.8759 | 0.3353 |
+| SVM |  0.9375 | 0.3033 |
+| CNN #1 | 0.9836 | tbd |
+
+
+
+## Baseline Model
+Decision Tree and SVM classifiers were used as baseline models. 
 ### Decision Tree Classifier
 
 
@@ -84,9 +98,22 @@ Decision Tree and SVM classifiers were used as baseline models. Model evaluation
 
 | MNIST Test Set | Kensanata Test Set |
 | --- | --- |
-| ![SVM](images/BarGraph_SVMCLassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMCLassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
-| ![SVM](images/ConfusionMatrix_SVMCLassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMCLassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
+| ![SVM](images/BarGraph_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
+| ![SVM](images/ConfusionMatrix_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
 
+### CNN Classifier #1
+
+| MNIST Test Set | Kensanata Test Set |
+| --- | --- |
+| ![CNN-1](images/BarGraph_CNN#1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN-1](images/BarGraph_CNN#1CLassifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
+| ![CNN-1](images/ConfusionMatrix_CNN#1Classifier(MNISTTestSet).png "CNN Classifier 1 - MNIST" )  | ![CNN-1](images/ConfusionMatrix_CNN#1Classifier(Kensanata).png "CNN Classifier 1 - Kensanata" ) |
+
+
+
+<!-- | MNIST Test Set | Kensanata Test Set |
+| --- | --- |
+| ![SVM](images/BarGraph_SVMCLassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/BarGraph_SVMCLassifier(Kensanata).png "SVM Classifier - Kensanata" ) |
+| ![SVM](images/ConfusionMatrix_SVMClassifier(MNISTTestSet).png "SVM Classifier - MNIST" )  | ![SVM](images/ConfusionMatrix_SVMClassifier(Kensanata).png "SVM Classifier - Kensanata" ) | -->
 
 
 # Obtaining Data
@@ -171,4 +198,13 @@ export FLASK_APP=main.py
 export FLASK_DEBUG=1
 flask run
 ```
+
+# App Prototype
+Note: This is a very preliminary web app to work out backend functionality. The actual app design only requires users to designate crop areas and enter answer keys once. From there, any number of exams/assignments can be auto-graded by simply scanning the page.
+<br>
+The web app can be run on mobile phones. Using the upload interface, the user can take a photo directly.
+
+| Webcam/IPEVO Example | Image/PDF Upload Example |
+| --- | --- |
+| ![webcam-example](images/app_webcam_example.png "webcam example" ) | ![upload-example](images/app_upload_example.png "upload example" ) |
 
