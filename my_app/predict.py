@@ -28,6 +28,7 @@ def predict_tf(tf_model, image):
     os.remove(image)
     predicted = []
     fig, axes = plt.subplots(len(segments), figsize=(6, 6*len(segments)))
+    segcount=0
     for seg, ax in list(zip(segments, axes.flatten())):
         found = label_arr == seg
         x, y = np.where(found)
@@ -53,18 +54,23 @@ def predict_tf(tf_model, image):
         digit = binary_arr[xmin:xmax, ymin:ymax]
         digit = np.pad(digit, int(len(digit)*.2), mode= 'constant', constant_values=(0,0))        
         if digit.shape[0]<10:
+            print("skipping segcount %d" % segcount)
+            segcount += 1
             ax.set_visible(False)       
             pass
         else:
             ax.imshow(digit,cmap='gray')
             im = Image.fromarray(np.array(digit)*255.0).convert("RGB")
-            im.save('000.jpg')
-            img = cv2.resize(cv2.imread('000.jpg',cv2.IMREAD_GRAYSCALE),(28,28),interpolation=cv2.INTER_CUBIC)
-            os.remove('000.jpg')
-            p = np.argmax(tf_model.predict(img.astype(float).flatten().reshape((1, 28, 28, 1))))
+            fn = "seg-%d.jpg" % segcount
+            im.save(fn)
+            img = cv2.resize(cv2.imread(fn,cv2.IMREAD_GRAYSCALE),(28,28),interpolation=cv2.INTER_CUBIC)
+            os.remove(fn)
+            predictions = tf_model.predict(img.astype(float).flatten().reshape((1, 28, 28, 1)))
+            p = np.argmax(predictions)
             ax.set_title(p)
             im.save(matname+'___predicted____'+str(p)+'.jpg')
             predicted.append([ymin,p])
+            segcount += 1
 
     predicted.sort()    
     predicted = [pr[1] for pr in predicted]

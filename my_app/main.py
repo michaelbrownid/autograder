@@ -52,8 +52,23 @@ def crop():
 # def landingpage(imgurl):
 @app.route('/landingpage',methods=['GET', 'POST', 'PUT'])
 def landingpage():
-	url=request.args['imgurl']
-	ans=request.args['answer']
+	# weird bug fixed by loading model here.
+	#File "/home/mpsb/Desktop/autograder/autograder/my_app/main.py", line 62, in landingpage
+        #predictions = predict_tf(tf_model,tempfile)
+	#File "/home/mpsb/Desktop/autograder/autograder/my_app/predict.py", line 64, in predict_tf
+	#p = np.argmax(tf_model.predict(img.astype(float).flatten().reshape((1, 28, 28, 1))))
+	# ValueError: Tensor Tensor("dense_7/Softmax:0", shape=(?, 10), dtype=float32) is not an element of this graph.
+	
+	tf_model = models.load_model('static/mnist_hasyv2_master_20epochs_batch64__ALLDATA_201911081573211546.h5')
+
+	# handle both GET (in url) and POST (in payload) requests
+	if request.method=="GET":
+		url=request.args['imgurl']
+		ans=request.args['answer']
+	else:
+		url=request.form['imgurl']
+		ans=request.form['answer']
+
 	imgfile,typee  = urllib.request.urlretrieve(str(url) )
 	arr=cv2.imread(imgfile) 
 	im = Image.fromarray(arr)
