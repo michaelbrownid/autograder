@@ -112,8 +112,17 @@ img {
     <!-- save btn -->
 		<button class="btn save hide">Crop Image</button>
     <!-- download btn -->
-    <input type="text" class="answer hide"  onfocus="if(this.value=='Enter Answer')this.value=''" onblur="if(this.value=='')this.value='Enter Answer'" />
-    <a href="" class="btn download hide">PROCESS</a>
+    <div id="correctProcess" class="hide">
+    <br>Enter Correct Answer: <input type="text" class="answer"  
+				     onfocus="if(this.value=='example: 1234') this.value=''" 
+				     value='example: 1234'" />
+  <form id="landingpage" action="/landingpage" method="post" class="hidden">
+    <input id="imgurl" name="imgurl" type="hidden" value="null">
+    <input id="outanswer" name="answer" type="hidden" value="null">
+  </form>
+
+    <br><a href="" class="btn download hide">PROCESS</a>
+    </div>
 
   </div>
 
@@ -133,6 +142,7 @@ save = document.querySelector('.save'),
 cropped = document.querySelector('.cropped'),
 dwn = document.querySelector('.download'),
 ans = document.querySelector('.answer'),
+ansdiv = document.querySelector('#correctProcess'),
 upload = document.querySelector('#file-input'),
 cropper = '';
 process = document.querySelector('.process'),
@@ -177,7 +187,7 @@ save.addEventListener('click', e => {
   // show image cropped
   cropped.src = imgSrc;
   dwn.classList.remove('hide');
-  ans.classList.remove('hide');
+  ansdiv.classList.remove('hide');
   dwn.download = 'imagename.png';
   dwn.setAttribute('href', imgSrc);
 });
@@ -187,11 +197,20 @@ dwn.addEventListener('click', e => {
   // process.classList.remove('hide');
   url = dwn.getAttribute('href');
   // answer = ans.value;
-  console.log('landingpage?imgurl='+url);
-  yobro = encodeURIComponent(url)
+  //console.log('landingpage?imgurl='+url);
+  //yobro = encodeURIComponent(url)
   //window.location.href='landingpage?imgurl='+yobro;
-  window.location.href='landingpage?imgurl='+yobro+'&answer='+ans.value;
+  //window.location.href='landingpage?imgurl='+yobro+'&answer='+ans.value;
 
+      // hidden form to send data and display new webpage from server
+      // as POST; rather than GETimage data in long url, this sends
+      // the data as post after the url. form handles encoding.
+      // https://postman-echo.com/post is useful for debugging
+
+      document.getElementById("imgurl").value=url;
+      document.getElementById("outanswer").value=ans.value;
+      landingpage.submit();
+	    
 });
 
     </script>
